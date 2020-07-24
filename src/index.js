@@ -5,29 +5,19 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import CommentItem from './comment-item';
 
+
+import App from './containers/app';
+import { createStore } from 'redux';
+import fields from './reducers';
 /* eslint-disable no-unused-expressions */
 
-class Comment extends React.Component {
-  constructor() {
-    super();
-    this.state =
-      {
-        fields : [
+const initialState = [
           {
             author: 'author: moderator',
             commentText: 'comment text: test message',
             date: new Date().toLocaleString()
           }
-        ],
-          newCommentText: '',
-          newAuthor:'',
-          isVisible: true
-  }
-    this.handleSubmit = this.handleSubmit.bind(this),
-    this.handleChange = this.handleChange.bind(this),
-    this.removeComment = this.removeComment.bind(this)
-  }
-
+]
    removeComment(i) {
      let fields = this.state.fields.slice();
      fields.splice(i, 1);
@@ -71,67 +61,16 @@ class Comment extends React.Component {
       fields = this.state.fields
     }
     this.setState({ fields });
-
   }
-  render() {
-    return (
-      <div>
-        <div>
-          {
-            this.state.fields.map((field, i) => {
-              return (
-                <CommentItem
-                    key={i}
-                    author={field.author}
-                    commentText={field.commentText}
-                    date={field.date}
-                    removeComment={this.removeComment.bind(this, i)}
-                 />
-              )
-            })
-          }
-        </div>
 
-        <div>
-          <form className="CommentForm" onSubmit={this.handleSubmit}>
-            <label>
-              Author name:
-              <input
-                name="newAuthor"
-                className="CommentInput"
-                type="text"
-                placeholder="Name"
-                value={this.state.newAuthor}
-                onChange={this.handleChange}
-              />
-            </label>
-            <label>
-              Comment text:
-              <textarea
-                name="newCommentText"
-                className="CommentText"
-                type="submit"
-                placeholder="Comment text"
-                value={this.state.newCommentText}
-                onChange={this.handleChange}
-              />
-            </label>
-            <button type="submit" className="formButton">Submit</button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-}
+  const store = createStore(todos, initialState);
+
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <Comment />
+  <App store={store}/>,
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
